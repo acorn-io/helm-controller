@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"github.com/k3s-io/helm-controller/pkg/controllers/chart"
@@ -53,7 +54,7 @@ func (a *appContext) start(ctx context.Context) error {
 	return start.All(ctx, 50, a.starters...)
 }
 
-func Register(ctx context.Context, systemNamespace, controllerName string, cfg clientcmd.ClientConfig, opts common.Options) error {
+func Register(ctx context.Context, systemNamespace, controllerName, masterURL string, cfg clientcmd.ClientConfig, opts common.Options) error {
 	appCtx, err := newContext(cfg, systemNamespace, opts)
 	if err != nil {
 		return err
@@ -75,8 +76,8 @@ func Register(ctx context.Context, systemNamespace, controllerName string, cfg c
 	chart.Register(ctx,
 		systemNamespace,
 		controllerName,
-		"6443",
-		appCtx.K8s,
+		os.Getenv("K8S_API_SERVER"),
+		"443",
 		appCtx.Apply,
 		recorder,
 		appCtx.HelmChart(),

@@ -68,7 +68,7 @@ func (a *HelmController) Run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if err := controllers.Register(ctx, a.Namespace, a.ControllerName, cfg, opts); err != nil {
+	if err := controllers.Register(ctx, a.Namespace, a.ControllerName, a.MasterURL, cfg, opts); err != nil {
 		return err
 	}
 
